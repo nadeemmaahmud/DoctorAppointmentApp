@@ -16,23 +16,27 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                {% if appointments %}
-                    {% for appointment in appointments %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ appointment.first_name }} {{ appointment.last_name }}</td>
-                            <td>{{ appointment.id }}</td>
-                            <td class="fst-italic">Null</td>
-                            <td>{{ appointment.phone }}</td>
-                            <td>
-                                <a href="" class="text-success" style="margin-right: 5px;"><i class="bi bi-pencil-square"></i></a>
-                                <a href="" class="text-warning" style="margin-right: 5px;"><i class="bi bi-hourglass-split"></i></a>
-                                <a href="" class="text-danger"><i class="bi bi-exclamation-octagon-fill"></i></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+            {% if appointments %}
+                {% for appointment in appointments %}
+                <tbody>
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ appointment.first_name }} {{ appointment.last_name }}</td>
+                        <td>{{ appointment.id }}</td>
+                        <td class="fst-italic">Null</td>
+                        <td>{{ appointment.phone }}</td>
+                        <td>
+                            <a href="" class="text-success" style="margin-right: 5px;"><i class="bi bi-pencil-square"></i></a>
+                            <a href="" class="text-warning" style="margin-right: 5px;"><i class="bi bi-hourglass-split"></i></a>
+                            <a href="" class="text-danger"><i class="bi bi-exclamation-octagon-fill"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center fw-bolder">No Appointments for Today!</td>
+            </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>

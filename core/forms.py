@@ -6,7 +6,7 @@ import datetime
 class AppointmentForm(ModelForm):
     class Meta:
         model = Appointment
-        fields = ['first_name', 'last_name', 'email', 'phone', 'date', 'shift']
+        fields = ['first_name', 'last_name', 'dob', 'email', 'phone', 'category', 'date', 'shift']
         widgets = {
             'date': forms.DateInput(
             attrs={
@@ -20,8 +20,10 @@ class AppointmentForm(ModelForm):
         labels = {
             'first_name': 'First Name',
             'last_name': 'Last Name',
+            'dob' : 'Date of birth',
             'email': 'Email (optional)',
             'phone': 'Phone Number',
             'date': 'Appointment Date',
+            'category': 'Doctor Type',
             'shift': 'Shift',
         }
