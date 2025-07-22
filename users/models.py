@@ -19,18 +19,18 @@ class CustomUser(AbstractUser):
         ('other', 'Other')
     ]
 
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
     role = models.CharField(choices=ROLES, default='patient')
-    dob = models.DateField(null=True, blank=True)
+    dob = models.DateField()
     gender = models.CharField(choices=GENDER)
-    email = models.EmailField(unique=True)
     email_isverified = models.BooleanField(default=False)
-    phone = models.CharField(unique=True)
+    phone = models.CharField(unique=True, max_length=20)
     phone_isverified = models.BooleanField(default=False)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    profile_pic = models.ImageField(upload_to='Profile_Pics')
+    profile_pic = models.ImageField(null=True, blank=True, upload_to='Profile_Pics')
+
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = []
     
     def __str__(self):
-        return f"{self.username} - {self.first_name} {self.last_name} - {self.email} - {self.phone}"
+        return f"{self.first_name} {self.last_name} - {self.email} - {self.phone}"

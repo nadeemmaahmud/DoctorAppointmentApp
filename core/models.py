@@ -10,6 +10,7 @@ class Appointment(models.Model):
     date = models.DateField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     shift = models.CharField(max_length=10, choices=[('morning', 'Morning'), ('afternoon', 'Afternoon'), ('evening', 'Evening')])
+    prev_case = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return f"Case No. {self.id} : {self.first_name} {self.last_name} | {self.date} | {self.shift}"

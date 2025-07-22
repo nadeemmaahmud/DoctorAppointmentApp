@@ -14,8 +14,7 @@
             <div>
                 <div class="dropdown m-2">
                     <a class="btn btn-info dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ user.profile_pic.url }}" alt=""> {{ user.first_name }}!
-                    </a>
+                    <img src="{{ user.profile_pic.url }}" alt=""> {{ user.first_name }}</a>
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/profile/">Profile</a></li>
@@ -28,7 +27,7 @@
         {% else %}
             <div>
                 <a href="{% url 'login' %}" class="btn btn-success m-2">Login</a>
-                <a href="/" class="btn btn-primary m-2">Register</a>
+                <a href="{% url 'register' %}" class="btn btn-warning m-2">Register</a>
             </div>
         {% endif %}
     </div>
