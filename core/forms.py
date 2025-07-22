@@ -16,6 +16,7 @@ class AppointmentForm(ModelForm):
             }
             ),
             'shift': forms.Select(attrs={'class': 'form-select'}),
+            'dob': forms.DateInput(attrs={'type': 'date'}),
         }
         labels = {
             'first_name': 'First Name',

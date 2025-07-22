@@ -32,13 +32,13 @@ def user_logout(request):
 
 def user_register(request):
     if request.method == 'POST':
-        form = UserCreationForm(data=request.POST)
+        form = RegisterForm(data=request.POST)
 
         if form.is_valid():
             form.save()
             messages.success(request, "You've been successfully registered! Please login to continue.")
             return redirect('login')
     else:
-        form = UserCreationForm()
+        form = RegisterForm()
 
     return render(request, "login_register_form.html", {'form':form, 'create':True})
