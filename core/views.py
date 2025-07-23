@@ -1,4 +1,5 @@
 import os
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import login, get_backends
 from django.contrib import messages
@@ -6,6 +7,8 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import date
 from sslcommerz_python_api import SSLCSession
+from twilio.rest import Client
+from twilio.twiml.messaging_response import MessagingResponse
 from .forms import AppointmentForm
 from .models import Appointment
 
@@ -98,6 +101,13 @@ def payment_status(request, phone):
                 appointment.is_paid = True
                 appointment.save()
                 messages.success(request, 'Appointment successfully booked after payment!')
+
+                client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+                twilio_message = client.messages.create(
+                    body=f"Your appointment is booked for {appointment.date} on {appointment.shift} shift. Please come to the clinic on time.",
+                    from_=settings.TWILIO_PHONE_NUMBER,
+                    to=appointment.phone
+                )
             except Appointment.DoesNotExist:
                 print(f"No unpaid appointment found for phone: {phone}")
         else:

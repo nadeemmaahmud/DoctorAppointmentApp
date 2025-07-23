@@ -43,9 +43,9 @@ class CustomUser(AbstractUser):
     ]
 
     username = None
-    role = models.CharField(choices=ROLES, default='patient')
+    role = models.CharField(max_length=20, choices=ROLES, default='patient')
     dob = models.DateField(null=True, blank=True)
-    gender = models.CharField(choices=GENDER)
+    gender = models.CharField(max_length=20, choices=GENDER)
     address = models.CharField(max_length=250)
     email_isverified = models.BooleanField(default=False)
     phone = models.CharField(unique=True, max_length=20)

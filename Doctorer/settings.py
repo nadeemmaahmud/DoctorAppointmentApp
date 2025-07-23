@@ -136,3 +136,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+TWILIO_ACCOUNT_SID=os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN=os.environ.get('TWILIO_AUTH_TOKEN')
