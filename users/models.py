@@ -8,7 +8,7 @@ class CustomUserManager(BaseUserManager):
         if not phone:
             raise ValueError("The Phone Number must be set")
         extra_fields.setdefault('is_active', True)
-        user = self.model(phone=phone, dob=None, **extra_fields)
+        user = self.model(phone=phone, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -46,6 +46,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(choices=ROLES, default='patient')
     dob = models.DateField(null=True, blank=True)
     gender = models.CharField(choices=GENDER)
+    address = models.CharField(max_length=250)
     email_isverified = models.BooleanField(default=False)
     phone = models.CharField(unique=True, max_length=20)
     phone_isverified = models.BooleanField(default=False)
