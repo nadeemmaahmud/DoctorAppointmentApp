@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import date
 from sslcommerz_python_api import SSLCSession
 from twilio.rest import Client
-from twilio.twiml.messaging_response import MessagingResponse
 from .forms import AppointmentForm
 from .models import Appointment
 

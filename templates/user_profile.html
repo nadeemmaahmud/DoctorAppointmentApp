@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %} 
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <div class="container form-control p-5 mt-5" style="max-width: 800px;">
+        <h3>Your Profile Info</h3>
+        <table class="table container mt-5">
+            <tr>
+                <td colspan="2">
+                    <div style="
+                        width: 150px;
+                        height: 150px;
+                        border: 1px solid #ccc;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: #f8f8f8;">
+                    
+                        {% if userdata.profile_pic %}
+                            <img src="{{ userdata.profile_pic.url }}"
+                                alt="Profile Picture"
+                                style="max-width: 100%; max-height: 100%; object-fit: cover;">
+                        {% else %}
+                            <span style="color: #aaa;">No image</span>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Full Name</td>
+                <td>:</td>
+                <td>{{ userdata.first_name }} {{ userdata.last_name }}</td>
+            </tr>
+            <tr>
+                <td>Date of Birth</td>
+                <td>:</td>
+                <td>{{ userdata.dob }}</td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>:</td>
+                <td>{{ userdata.gender }}</td>
+            </tr>
+            <tr>
+                <td>E-mail</td>
+                <td>:</td>
+                <td>{{ userdata.email }} {% if userdata.email and not userdata.email_isverified %}<a href="{% url 'send_email_otp' %}" class="text-warning">Verify your email!</a>{% endif %}</td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td>:</td>
+                <td>{{ userdata.phone }} {% if not userdata.phone_isverified %}<a href="{% url 'send_phone_otp' %}" class="text-warning">Verify your phone!</a>{% endif %}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>:</td>
+                <td>{{ userdata.address }}</td>
+            </tr>
+        </table>
+        <a href="{% url 'update' %}" class="btn btn-warning">Update Profile</a>
+    </div>
+{% endblock %}

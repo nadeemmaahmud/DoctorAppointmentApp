@@ -6,7 +6,7 @@ import datetime
 class AppointmentForm(ModelForm):
     class Meta:
         model = Appointment
-        fields = ['first_name', 'last_name', 'dob', 'gender', 'address', 'email', 'phone', 'category', 'date', 'shift', 'prev_case']
+        fields = ['first_name', 'last_name', 'dob', 'gender', 'address', 'email', 'country_code', 'phone', 'category', 'date', 'shift', 'prev_case']
         widgets = {
             'date': forms.DateInput(
             attrs={
@@ -17,7 +17,8 @@ class AppointmentForm(ModelForm):
             ),
             'shift': forms.Select(attrs={'class': 'form-select'}),
             'dob': forms.DateInput(attrs={'type': 'date'}),
-            'phone': forms.TextInput(attrs={'placeholder': '+8801xxxxxxxxx'})
+            'country_code': forms.TextInput(attrs={'placeholder': '+88'}),
+            'phone': forms.TextInput(attrs={'placeholder': '01xxxxxxxxx'})
         }
         labels = {
             'first_name': 'First Name',
@@ -44,18 +45,15 @@ class AppointmentForm(ModelForm):
             self.fields.pop('gender')
             self.fields.pop('address')
             self.fields.pop('email')
+            self.fields.pop('country_code')
             self.fields.pop('phone')
 
-    def clean_phone(self):
-        phone = self.cleaned_data.get('phone', '').strip()
+    def clean(self):
+        cleaned_data = super().clean()
+        code = cleaned_data.get('country_code')
+        number = cleaned_data.get('phone')
 
-        phone = ''.join(filter(str.isdigit, phone))
-
-        if phone.startswith('880'):
-            phone = '+' + phone
-        elif phone.startswith('0'):
-            phone = '+88' + phone[1:]
-        elif not phone.startswith('+88'):
-            phone = '+88' + phone
-
-        return phone
+        if code and number:
+            merged_phone = f"{code.strip()}{number.strip()}"
+            cleaned_data['phone'] = merged_phone
+        return cleaned_data

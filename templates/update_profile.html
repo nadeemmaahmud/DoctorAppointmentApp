@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %} 
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+    <form method="post" class="container form-control p-5 mt-5" style="background-color: rgb(231, 227, 222); max-width: 800px;" enctype="multipart/form-data">
+        <h3>Update Profile Info</h3>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a class="text-decoration-none" href="{% url 'profile' %}">Back to profile</a>
+    </form>
+{% endblock %}

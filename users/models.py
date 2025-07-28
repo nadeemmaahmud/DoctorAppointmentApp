@@ -48,6 +48,7 @@ class CustomUser(AbstractUser):
     gender = models.CharField(max_length=20, choices=GENDER)
     address = models.CharField(max_length=250)
     email_isverified = models.BooleanField(default=False)
+    country_code = models.CharField(max_length=5)
     phone = models.CharField(unique=True, max_length=20)
     phone_isverified = models.BooleanField(default=False)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)

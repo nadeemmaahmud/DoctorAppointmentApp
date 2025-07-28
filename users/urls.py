@@ -1,10 +1,16 @@
 from django.urls import path
-from .views import user_logout, user_login, user_register
-from django.conf import settings
-from django.conf.urls.static import static
+from .views import user_logout, user_login, user_register, userprofile, userupdate, appointments, change_password, verify_phone, verify_email, verify_phone_otp, verify_email_otp
 
 urlpatterns = [
     path('login/', user_login, name='login'),
     path("logout/", user_logout, name='logout'),
     path("register/", user_register, name='register'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('profile/', userprofile, name='profile'),
+    path('profile/update/', userupdate, name='update'),
+    path('profile/change-password/', change_password, name='change_password'),
+    path('verify/phone/', verify_phone, name='send_phone_otp'),
+    path('verify/phone/otp/', verify_phone_otp, name='verify_phone_otp'),
+    path('verify/email/', verify_email, name='send_email_otp'),
+    path('verify/email/otp/', verify_email_otp, name='verify_email_otp'),
+    path('appointments/', appointments, name='user_appointments')
+]
