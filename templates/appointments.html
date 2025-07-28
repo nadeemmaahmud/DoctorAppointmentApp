@@ -10,8 +10,6 @@
                 <tr>
                     <th>SL</th>
                     <th>Patient Name</th>
-                    <th>Case No.</th>
-                    <th>Prev. Case No.</th>
                     <th>Phone Number</th>
                     <th>Actions</th>
                 </tr>
@@ -22,8 +20,6 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ appointment.first_name }} {{ appointment.last_name }}</td>
-                        <td>{{ appointment.id }}</td>
-                        <td class="fst-italic">Null</td>
                         <td>{{ appointment.phone }}</td>
                         <td>
                             <a href="" class="text-success" style="margin-right: 5px;"><i class="bi bi-pencil-square"></i></a>
@@ -34,7 +30,7 @@
                 {% endfor %}
             {% else %}
             <tr>
-                <td colspan="6" class="text-center fw-bolder">No Appointments for Today!</td>
+                <td colspan="4" class="text-center fw-bolder">No Appointments for Today!</td>
             </tr>
             {% endif %}
             </tbody>

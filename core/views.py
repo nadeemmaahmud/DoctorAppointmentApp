@@ -14,16 +14,26 @@ from .models import Appointment
 
 def home(request):
     if request.method == 'POST':
-        form = AppointmentForm(request.POST)
+        form = AppointmentForm(request.POST, user = request.user)
 
         if form.is_valid():
             appointment = form.save(commit=False)
-            appointment.is_paid = False  # Mark as unpaid initially
+
+            if request.user.is_authenticated:
+                appointment.first_name = request.user.first_name
+                appointment.last_name = request.user.last_name
+                appointment.gender = request.user.gender
+                appointment.dob = request.user.dob
+                appointment.address = request.user.address
+                appointment.email = request.user.email
+                appointment.phone = request.user.phone
+
+            appointment.is_paid = False
             appointment.save()
 
             return redirect('payment', phone=appointment.phone)
     else:
-        form = AppointmentForm()
+        form = AppointmentForm(user=request.user)
 
     return render(request, 'home.html', {'form': form})
 

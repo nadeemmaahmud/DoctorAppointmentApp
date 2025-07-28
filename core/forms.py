@@ -17,6 +17,7 @@ class AppointmentForm(ModelForm):
             ),
             'shift': forms.Select(attrs={'class': 'form-select'}),
             'dob': forms.DateInput(attrs={'type': 'date'}),
+            'phone': forms.TextInput(attrs={'placeholder': '+8801xxxxxxxxx'})
         }
         labels = {
             'first_name': 'First Name',
@@ -31,3 +32,30 @@ class AppointmentForm(ModelForm):
             'shift': 'Shift',
             'prev_case': 'Previous Case No.'
         }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if user and user.is_authenticated:
+            self.fields.pop('first_name')
+            self.fields.pop('last_name')
+            self.fields.pop('dob')
+            self.fields.pop('gender')
+            self.fields.pop('address')
+            self.fields.pop('email')
+            self.fields.pop('phone')
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone', '').strip()
+
+        phone = ''.join(filter(str.isdigit, phone))
+
+        if phone.startswith('880'):
+            phone = '+' + phone
+        elif phone.startswith('0'):
+            phone = '+88' + phone[1:]
+        elif not phone.startswith('+88'):
+            phone = '+88' + phone
+
+        return phone
