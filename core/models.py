@@ -21,6 +21,11 @@ class Appointment(models.Model):
     shift = models.CharField(max_length=20, choices=[('morning-9am', 'Morning - 9AM'), ('afternoon-3pm', 'Afternoon - 3PM'), ('evening-7pm', 'Evening - 7PM')])
     prev_case = models.CharField(max_length=10, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
+    is_postponded = models.BooleanField(default=False)
+    initial_real_disease = models.TextField(null=True, blank=True)
+    testes = models.TextField(null=True, blank=True)
+    pescription = models.TextField(null=True, blank=True)
+    check_again = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
 
     def __str__(self):

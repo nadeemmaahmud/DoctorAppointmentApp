@@ -1,9 +1,11 @@
 from django.urls import path
-from .views import home, appointments, payment, payment_status
+from .views import home, appointments, payment, payment_status, users, user_details
 
 urlpatterns = [
     path('', home, name='home'),
     path('appointments/', appointments, name='appointments'),
     path('payment/<str:phone>/', payment, name='payment'),
     path('payment-status/<str:phone>/', payment_status, name='payment_status'),
+    path('users/', users, name='users'),
+    path('users/<int:pk>/', user_details, name='user_details'),
 ]

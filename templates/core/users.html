@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: auto; max-height: 100%;">
+        <h3>User List</h3>
+        <table class="container table">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ user.first_name }}{{ user.last_name }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ user.phone }}</td>
+                        <td><a href="{% url 'user_details' user.id %}" class="text-decoration-none">Details</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

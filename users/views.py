@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.core.mail import send_mail
 from .forms import RegisterForm, UserProfileForm
+from .models import CustomUser
 from core.models import Appointment
 from django.conf import settings
 from twilio.rest import Client
@@ -28,7 +29,7 @@ def user_login(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, "login_register_form.html", {'form':form})
+    return render(request, "user/login_register_form.html", {'form':form})
 
 def user_logout(request):
     logout(request)
@@ -46,7 +47,7 @@ def user_register(request):
     else:
         form = RegisterForm()
 
-    return render(request, "login_register_form.html", {'form':form, 'create':True})
+    return render(request, "user/login_register_form.html", {'form':form, 'create':True})
 
 def userupdate(request):
     if request.method == "POST":
@@ -59,11 +60,11 @@ def userupdate(request):
     else:
         form = UserProfileForm(instance=request.user, user=request.user)
 
-    return render(request, "update_profile.html", {'form': form})
+    return render(request, "user/update_profile.html", {'form': form})
 
 def userprofile(request):
     userdata = request.user
-    return render(request, "user_profile.html", {'userdata': userdata})
+    return render(request, "user/user_profile.html", {'userdata': userdata})
 
 def change_password(request):
     if request.method == 'POST':
@@ -77,7 +78,7 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, 'change_reset_password.html', {'form': form, 'update': True})
+    return render(request, 'user/change_reset_password.html', {'form': form, 'update': True})
 
 def verify_phone(request):
     if request.method == 'POST':
@@ -94,7 +95,7 @@ def verify_phone(request):
         messages.success(request, "Verification code sent!")
         return redirect('verify_phone_otp')
         
-    return render(request, 'otp_check.html')
+    return render(request, 'user/otp_check.html')
 
 def verify_email(request):
     if request.method == 'POST':
@@ -105,12 +106,12 @@ def verify_email(request):
         message = f'Your email verification code is: {otp}'
         from_email = settings.DEFAULT_FROM_EMAIL
         to_email = request.user.email
-
         send_mail(subject, message, from_email, [to_email])
+
         messages.success(request, 'Verification code sent to your email.')
         return redirect('verify_email_otp')
             
-    return render(request, 'otp_check.html')
+    return render(request, 'user/otp_check.html')
         
 def verify_phone_otp(request):
     if request.method == 'POST':
@@ -127,7 +128,7 @@ def verify_phone_otp(request):
         else:
             messages.error(request, "Incorrect verification code.")
 
-    return render(request, 'verify_otp.html')
+    return render(request, 'user/verify_otp.html')
 
 def verify_email_otp(request):
     if request.method == 'POST':
@@ -143,9 +144,70 @@ def verify_email_otp(request):
         else:
             messages.error(request, "Incorrect verification code.")
 
-    return render(request, 'verify_email_otp.html')
+    return render(request, 'user/verify_email_otp.html')
 
+def reset_pass_otp(request):
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+
+        try:
+            user = CustomUser.objects.get(phone=phone)
+        except CustomUser.DoesNotExist:
+            messages.error(request, "No user found with this phone number.")
+            return redirect('reset_pass')
+
+        otp = str(random.randint(100000, 999999))
+        request.session['reset_phone_otp'] = otp
+        request.session['reset_phone'] = phone
+
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        try:
+            client.messages.create(
+                body=f"Your password reset OTP is {otp}",
+                from_=settings.TWILIO_PHONE_NUMBER,
+                to=phone
+            )
+            messages.success(request, "OTP sent to your phone.")
+        except Exception as e:
+            messages.error(request, f"Failed to send SMS: {str(e)}")
+            return redirect('reset_pass')
+
+        return redirect('verify_reset_otp')
+
+    return render(request, 'user/request_phone.html')
+
+def verify_reset_otp(request):
+    if request.method == 'POST':
+        entered_otp = request.POST.get('otp')
+        real_otp = request.session.get('reset_phone_otp')
+
+        if entered_otp == real_otp:
+            messages.success(request, "OTP verified! You can now reset your password.")
+            return redirect('reset_password_form')
+        else:
+            messages.error(request, "Incorrect OTP.")
+
+    return render(request, 'user/verify_otp.html')
+
+def reset_password_form(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        phone = request.session.get('reset_phone')
+
+        try:
+            user = CustomUser.objects.get(phone=phone)
+            user.set_password(password)
+            user.save()
+            del request.session['reset_phone']
+            del request.session['reset_phone_otp']
+            messages.success(request, "Password reset successful.")
+            return redirect('login')
+        except CustomUser.DoesNotExist:
+            messages.error(request, "User not found.")
+            return redirect('reset_pass')
+
+    return render(request, 'user/reset_form.html')
 
 def appointments(request):
     appointment = Appointment.objects.filter(phone=request.user.phone)
-    return render(request, 'appointments.html', {'appointments': appointment})
+    return render(request, 'core/appointments.html', {'appointments': appointment})

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <label>New Password:</label>
+        <input type="password" name="password" required>
+        <button type="submit">Reset Password</button>
+    </form>
+{% endblock %}

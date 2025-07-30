@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from django import forms
 from .models import Appointment
+from users.models import CustomUser
 import datetime
 
 class AppointmentForm(ModelForm):
@@ -57,3 +58,8 @@ class AppointmentForm(ModelForm):
             merged_phone = f"{code.strip()}{number.strip()}"
             cleaned_data['phone'] = merged_phone
         return cleaned_data
+    
+class UserDetailsForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['role', 'category', 'description']

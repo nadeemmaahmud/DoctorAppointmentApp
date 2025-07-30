@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %} 
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <div class="container form-control p-5 mt-5" style="max-width: 800px;">
+        <h3>Your Profile Info</h3>
+        <table class="table container mt-5">
+            <tr>
+                <td colspan="2">
+                    <div style="
+                        width: 150px;
+                        height: 150px;
+                        border: 1px solid #ccc;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: #f8f8f8;">
+                    
+                        {% if user.profile_pic %}
+                            <img src="{{ user.profile_pic.url }}"
+                                alt="Profile Picture"
+                                style="max-width: 100%; max-height: 100%; object-fit: cover;">
+                        {% else %}
+                            <span style="color: #aaa;">No image</span>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Full Name</td>
+                <td>:</td>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+            </tr>
+            <tr>
+                <td>Date of Birth</td>
+                <td>:</td>
+                <td>{{ user.dob }}</td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>:</td>
+                <td>{{ user.gender }}</td>
+            </tr>
+            <tr>
+                <td>E-mail</td>
+                <td>:</td>
+                <td>{{ user.email }} {% if user.email and not user.email_isverified %}<p class="text-warning">Not verified!</p>{% endif %}</td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td>:</td>
+                <td>{{ user.phone }} {% if not user.phone_isverified %}<p class="text-warning">Not verified!</p>{% endif %}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>:</td>
+                <td>{{ user.address }}</td>
+            </tr>
+            <tr>
+                <td>Variables</td>
+                <td>:</td>
+                <td>{{ form|crispy }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

@@ -11,7 +11,8 @@
             <button type="submit" class="btn btn-primary">{% if create %}Register{% else %}Login{% endif %}</button>
             {% if create %}
                 <p>Already have an account? <a class="text-decoration-none" href="{% url 'login' %}">Login</a></p>
-            {% else %}
+                {% else %}
+                <p><a href="{% url 'reset_pass' %}" class="text-decoration-none">Forgot password?</a></p>
                 <p>Don't have an account? <a class="text-decoration-none" href="{% url 'register' %}">Register</a></p>
             {% endif %}
         </form>

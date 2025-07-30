@@ -1,15 +1,14 @@
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.contrib.auth import login, get_backends
 from django.contrib import messages
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
 from sslcommerz_python_api import SSLCSession
 from twilio.rest import Client
-from .forms import AppointmentForm
+from .forms import AppointmentForm, UserDetailsForm
 from .models import Appointment
+from users.models import CustomUser
 
 def home(request):
     if request.method == 'POST':
@@ -34,7 +33,7 @@ def home(request):
     else:
         form = AppointmentForm(user=request.user)
 
-    return render(request, 'home.html', {'form': form})
+    return render(request, 'core/home.html', {'form': form})
 
 def payment(request, phone):
     mypayment = SSLCSession(
@@ -128,4 +127,24 @@ def payment_status(request, phone):
 
 def appointments(request):
     appointments = Appointment.objects.all()
-    return render(request, 'appointments.html', {'appointments': appointments})
+    return render(request, 'core/appointments.html', {'appointments': appointments})
+
+def users(request):
+    all_users = CustomUser.objects.all()
+    return render(request, 'core/users.html', {'users': all_users})
+
+def user_details(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+
+    if request.method == 'POST':
+        form = UserDetailsForm(request.POST, instance=user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User profile updated!")
+            return redirect('users')
+        
+    else:
+        form = UserDetailsForm(instance=user)
+
+    return render(request, 'core/user_details.html', {'user': user, 'form': form})
