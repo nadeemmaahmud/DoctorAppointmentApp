@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .forms import RegisterForm, UserProfileForm
 from .models import CustomUser
@@ -31,6 +32,7 @@ def user_login(request):
 
     return render(request, "user/login_register_form.html", {'form':form})
 
+@login_required
 def user_logout(request):
     logout(request)
     messages.success(request, "You've been logged out!")
@@ -49,6 +51,7 @@ def user_register(request):
 
     return render(request, "user/login_register_form.html", {'form':form, 'create':True})
 
+@login_required
 def userupdate(request):
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=request.user, user=request.user)
@@ -62,10 +65,12 @@ def userupdate(request):
 
     return render(request, "user/update_profile.html", {'form': form})
 
+@login_required
 def userprofile(request):
     userdata = request.user
     return render(request, "user/user_profile.html", {'userdata': userdata})
 
+@login_required
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -80,6 +85,7 @@ def change_password(request):
 
     return render(request, 'user/change_reset_password.html', {'form': form, 'update': True})
 
+@login_required
 def verify_phone(request):
     if request.method == 'POST':
         code = str(random.randint(100000, 999999))
@@ -97,6 +103,7 @@ def verify_phone(request):
         
     return render(request, 'user/otp_check.html')
 
+@login_required
 def verify_email(request):
     if request.method == 'POST':
         otp = str(random.randint(100000, 999999))
@@ -112,7 +119,8 @@ def verify_email(request):
         return redirect('verify_email_otp')
             
     return render(request, 'user/otp_check.html')
-        
+
+@login_required        
 def verify_phone_otp(request):
     if request.method == 'POST':
         entered_otp = request.POST.get('otp')
@@ -130,6 +138,7 @@ def verify_phone_otp(request):
 
     return render(request, 'user/verify_otp.html')
 
+@login_required
 def verify_email_otp(request):
     if request.method == 'POST':
         entered_otp = request.POST.get('otp')
@@ -208,6 +217,7 @@ def reset_password_form(request):
 
     return render(request, 'user/reset_form.html')
 
+@login_required
 def appointments(request):
     appointment = Appointment.objects.filter(phone=request.user.phone)
     return render(request, 'core/appointments.html', {'appointments': appointment})

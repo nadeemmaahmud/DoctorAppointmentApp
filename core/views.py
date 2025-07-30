@@ -1,5 +1,6 @@
 import os
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib import messages
 from django.urls import reverse
@@ -125,11 +126,12 @@ def payment_status(request, phone):
 
     return redirect('home')
 
-
+@login_required
 def appointments(request):
     appointments = Appointment.objects.all()
     return render(request, 'core/appointments.html', {'appointments': appointments})
 
+@login_required
 def appointment_detailes(request, pk):
     appointment = get_object_or_404(Appointment, pk=pk)
 
@@ -145,10 +147,12 @@ def appointment_detailes(request, pk):
 
     return render(request, 'core/appointment_details.html', {'appointment': appointment, 'form': form})
 
+@login_required
 def users(request):
     all_users = CustomUser.objects.all()
     return render(request, 'core/users.html', {'users': all_users})
 
+@login_required
 def user_details(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
 
