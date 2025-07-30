@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from sslcommerz_python_api import SSLCSession
 from twilio.rest import Client
-from .forms import AppointmentForm, UserDetailsForm
+from .forms import AppointmentForm, UserDetailsForm, AppointmentDetailsForm
 from .models import Appointment
 from users.models import CustomUser
 
@@ -125,9 +125,25 @@ def payment_status(request, phone):
 
     return redirect('home')
 
+
 def appointments(request):
     appointments = Appointment.objects.all()
     return render(request, 'core/appointments.html', {'appointments': appointments})
+
+def appointment_detailes(request, pk):
+    appointment = get_object_or_404(Appointment, pk=pk)
+
+    if request.method == 'POST':
+        form = AppointmentDetailsForm(request.POST, instance=appointment)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Appointment details updated!")
+            return redirect('appointments')
+    else:
+        form = AppointmentDetailsForm(instance=appointment)
+
+    return render(request, 'core/appointment_details.html', {'appointment': appointment, 'form': form})
 
 def users(request):
     all_users = CustomUser.objects.all()

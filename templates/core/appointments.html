@@ -25,7 +25,7 @@
                         <td>
                             {% if appointment.is_completed %}Completed{% else %}Upcoming{% endif %}
                         </td>
-                        <td><a href="" class="text-warning text-decoration-none">See Details</a></td>
+                        <td><a href="{% url 'appointment_details' appointment.id %}" class="text-warning text-decoration-none">See Details</a></td>
                     </tr>
                 {% endfor %}
             {% else %}

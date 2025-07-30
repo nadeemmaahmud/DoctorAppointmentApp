@@ -59,6 +59,11 @@ class AppointmentForm(ModelForm):
             cleaned_data['phone'] = merged_phone
         return cleaned_data
     
+class AppointmentDetailsForm(ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['initial_real_disease', 'testes', 'pescription']
+    
 class UserDetailsForm(forms.ModelForm):
     class Meta:
         model = CustomUser

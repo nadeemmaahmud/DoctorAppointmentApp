@@ -19,8 +19,9 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'profile' %}">Your Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
-                        {% if user.role == 'admin' %}
+                        {% if user.role == 'admin' or user.role == 'doctor' %}
                             <li><a class="dropdown-item" href="{% url 'appointments' %}">Appointments</a></li>
+                        {% elif user.role == 'admin' %}
                             <li><a class="dropdown-item" href="{% url 'users' %}">Manage User</a></li>
                         {% elif user.role == 'patient' %}
                             <li><a class="dropdown-item" href="{% url 'user_appointments' %}">Appointments</a></li>
